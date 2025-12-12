@@ -97,8 +97,4 @@ Commit your changes.
 
 Open a Pull Request, and we will review it.
 
-📜 License
 
-This project is licensed under the [MIT License].
-
-Crafted with meticulous care and advanced design.
