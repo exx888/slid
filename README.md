@@ -1,12 +1,6 @@
 🌟 Detailed Overview
 
-SLID is built as a sophisticated solution that transcends traditional analytical tools. The tool relies on powerful Python algorithms to provide [Mention primary function, e.g., extract instant insights or perform accurate comparisons between data points].
-
-Problems SLID Solves:
-
-Simplifying the process of [Problem 1, e.g., classifying unstructured text].
-
-Providing high-precision graphical visualizations for [Problem 2, e.g., tracking vital performance metrics].
+SLID is built as a sophisticated solution that transcends traditional analytical tools. The tool relies on powerful Python algorithms to provide 
 
 Why Choose SLID?
 Because it combines ease of use with processing power, making complex analysis accessible to everyone.
@@ -35,7 +29,7 @@ Installation Steps
 
 Clone the repository:
 
-git clone 
+git clone https://github.com/exx888/slid.git
 cd slid
 
 
